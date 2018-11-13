@@ -1,5 +1,6 @@
 package com.yangsha.dao_impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -12,9 +13,24 @@ public class RoleDaoImpl implements IRoleDao {
 
 	@Override
 	public int add(role t) {
-		// TODO Auto-generated method stub
-		//String sql="insert into role()"
-		return 0;
+		List<String>  params=new ArrayList();
+		String sql_head="insert into role(rolename,resource_ids,";
+		String sql_tail="values(?,?";
+		params.add(t.getRolename());
+		params.add(t.getResource_ids());
+		if (t.getDesc()!=null) {
+			sql_head+="desc,";
+			sql_tail+="?,";
+			params.add(t.getDesc());
+			
+		}
+	      sql_head=sql_head.substring(0,sql_head.length()-1);
+	      sql_tail=sql_tail.substring(0,sql_head.length()-1);
+	      String sql=sql_head+")"+sql_tail+")";
+      
+         int val=JdbcHelper.executeQuery(sql, params.toArray());
+ 		
+		return val;
 	}
 
 	@Override
@@ -54,7 +70,35 @@ public class RoleDaoImpl implements IRoleDao {
 	@Override
 	public int updateByPrimaryKeySelective(role t) {
 		// TODO Auto-generated method stub
-		return 0;
+		
+		
+		
+		// TODO Auto-generated method stub
+				List<String>  params=new ArrayList();
+				String sql="update role set name=?,";
+				if (t.getDesc()!=null) {
+					
+					sql+="desc=?,";
+					
+					
+				}
+				
+		         if (t.getResource_ids()!=null) {
+					
+					sql+="resource_ids=?,";
+					params.add(t.getResource_ids());
+					
+					
+				}
+				
+		         
+		         sql=sql.substring(0,sql.length()-1);
+		         sql+="where id=?";
+		         params.add(String.valueOf(t.getId()));
+		         int val=JdbcHelper.executeQuery(sql, params.toArray());
+		 		
+				return 0;
+		
 	}
 
 }
