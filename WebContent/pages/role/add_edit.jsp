@@ -1,14 +1,15 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="myfn" uri="/WEB-INF/functions.tld" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@include file="../share/head.jsp" %>
+<%@include file="/pages/share/head.jsp" %>
 <html>
 <head>
     <title></title>
-    <!-- <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/css.css">  -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/zTreeStyle/zTreeStyle.css">
+    
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/Public/css/zTreeStyle/zTreeStyle.css">
     <style>
         ul.ztree {margin-top: 10px;border: 1px solid #617775;background: #f0f6e4;width:220px;height:200px;overflow-y:scroll;overflow-x:auto;}
         .l360{
@@ -32,31 +33,31 @@
            <tr>
               <td class="text-right">角色名*：</td>
               <td>
-                 <input type="idden" value="id"/>
                  <input type="hidden" name="id" value="${role.id }"/>
-                 <input type="text" value="rolename"  value="${role.rolename }" class="l360"/>
+                 
+                 <input type="text" name="rolename" value="${role.rolename}"  class="l360"/>
               </td>
            </tr>
            
            <tr>
               <td class="text-right">角色描述：</td>
               <td>
-                 <input type="text" value="${role.desc }" class="l360"/>
+                 <input type="text" value="${role.desc}" name="desc" class="l360"/>
               </td>
            </tr>
            
            <tr>
-              <td class="text-right">拥有的资源列表：</td>
+              <td class="text-right">拥有的资源列表*：</td>
               <td>
-                <input type="hidden"  id="resource_ids"  name="resoure_ids" value="{role.resource_ids}"/>
-                  <input class="l360" type="text" id="resourceName" name="resourceName"  readonly  value=" ${myfn:getNamesByIds(role.resource_ids)}"/>
+                 <input type="hidden" id="resource_ids" name="resource_ids" value="${role.resource_ids }"/>
+                 <input class="l360" type="text" id="resourceName" name="resourceName"  readonly  <c:if test="${not empty role.resource_ids }">value=" ${myfn:getNamesByIds(role.resource_ids)}" </c:if>/>
                  <a id="menuBtn" href="#">选择</a>
               </td>
            </tr>
            
            <tr>
              <td colspan="2">
-              <button>增加 / 编辑</button>
+              <button>保存</button>
              </td>
            </tr>
         </table>
@@ -91,15 +92,15 @@
 
             var zNodes =[
                 <c:forEach items="${resourceList}" var="r">
-                <c:if test="${not r.rootNode}">
-                {id:${r.id}, pId:${r.parentid},name:"${r.text}",checked:${fn:contains(role.resourceIds,r.id)}},
-                </c:if>
+                
+                {id:${r.id}, pId:${r.pid},name:"${r.text}",checked:${fn:contains(role.resource_ids,r.id)}},
+                
                 </c:forEach>
             ];
             
             //console.log(zNodes);
 
-            function onCheck(e, treeId, treeNode) {//复选框被点击的时候
+            function onCheck(e, treeId, treeNode) {
                 var zTree = $.fn.zTree.getZTreeObj("tree"),
                         nodes = zTree.getCheckedNodes(true),
                         id = "",

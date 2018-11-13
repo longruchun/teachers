@@ -16,7 +16,7 @@ public class roleBizImpl implements IroleBiz {
 	@Override
 	public int add(role t) {
 		// TODO Auto-generated method stub
-		return 0;
+		return dao.add(t);
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public class roleBizImpl implements IroleBiz {
 	@Override
 	public int updateByPrimaryKeySelective(role t) {
 		// TODO Auto-generated method stub
-		return 0;
+		return dao.updateByPrimaryKeySelective(t);
 	}
 	
 	

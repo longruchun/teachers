@@ -31,68 +31,60 @@ public class RoleServlet extends BaseServlet {
 	   //若是post 提交，则处理表单数据，做持久化处理
 	   //以下代码依据提交方法做分支:
 	   IMenuBiz biz=new MenuBizImpl();
+	   IroleBiz role_biz=new roleBizImpl();
 	   if(request.getMethod().equalsIgnoreCase("get")) {
 		   //get提交的请求---servlet 的响应是为用户呈现填列表单
-		  // request.setAttribute(arg0, arg1);
-		 
-		   String id=request.getParameter("id");
-		   if (id.equals("0")) {
-			   request.setAttribute("role", new role());
-			   
-			
-		} else {
-			IroleBiz role_biz=new roleBizImpl();
-			request.setAttribute("role", role_biz.getEntityById(Integer.parseInt("id")));
 
-		}
+		  
+		   
+		   String id=request.getParameter("id");
+		   if(id==null) {
+			   //add
+			   request.setAttribute("role",new role());
+		   }else {
+			   //edit
+			   
+			   request.setAttribute("role",role_biz.getEntityById(Integer.parseInt(id)));
+		   }
 		   
 		   
-		   
-		   request.setAttribute("resoureList", biz.getAll());
-		   return "redirect:/pages/role/add_edit.jsp"; 
+		   request.setAttribute("resourceList",biz.getAll());
+		   return "/pages/role/add_edit.jsp"; 
 	   }else if(request.getMethod().equalsIgnoreCase("post")) {
 		   //post 提交过来的表单数据，做持久化到数据库保存
-		   request.setCharacterEncoding("utf-8");
+		   request.setCharacterEncoding("UTF-8");
+		   
 		   String id=request.getParameter("id");
-		   //System.out.println("id"+id);
 		   String rolename=request.getParameter("rolename");
 		   String desc=request.getParameter("desc");
-		   String resoure_ids=request.getParameter("resoure_ids");
+		   String resource_ids=request.getParameter("resource_ids");
 		   
 		   role role_=new role();
 		   
-		   if (!id.equals("0")) {
-			role_.setId(Integer.parseInt(id));
-		} 
-		   
-		   
-		role_.setRolename(rolename);
-		   
-		   if (desc!=null) {
+		   if(!id.equals("0")) {
+			   role_.setId(Integer.parseInt(id));
+		   }
+		   role_.setRolename(rolename);
+		   if(desc!=null) {
 			   role_.setDesc(desc);
-			
-		}
+		   }
+		   if(resource_ids!=null) {
+			   role_.setResource_ids(resource_ids);
+		   }
 		   
 		   
-		   
-		if (resoure_ids!=null) {
-			 role_.setResource_ids(resoure_ids);
-			
-		}
-		   
-		   if (id.equals("0")) {
+		   if(id.equals("0")) {
 			   //添加
-			 
-			   
-			
-		}else {
-			
-			//修改
-		}
+			   role_biz.add(role_);
+		   }else {
+			   //修改
+               role_biz.updateByPrimaryKeySelective(role_);
+		   }
 		   
 	   }
+	   
 	   return "/roleServlet?method=list"; 
    }
    
- 
+   
 }

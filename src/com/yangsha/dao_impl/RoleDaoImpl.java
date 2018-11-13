@@ -13,23 +13,23 @@ public class RoleDaoImpl implements IRoleDao {
 
 	@Override
 	public int add(role t) {
-		List<String>  params=new ArrayList();
+        List params=new ArrayList();
+		
 		String sql_head="insert into role(rolename,resource_ids,";
-		String sql_tail="values(?,?";
+		String sql_tail=" values(?,?,";
 		params.add(t.getRolename());
 		params.add(t.getResource_ids());
-		if (t.getDesc()!=null) {
+		if(t.getDesc()!="") {
 			sql_head+="desc,";
 			sql_tail+="?,";
 			params.add(t.getDesc());
-			
 		}
-	      sql_head=sql_head.substring(0,sql_head.length()-1);
-	      sql_tail=sql_tail.substring(0,sql_head.length()-1);
-	      String sql=sql_head+")"+sql_tail+")";
-      
-         int val=JdbcHelper.executeQuery(sql, params.toArray());
- 		
+		
+		sql_head=sql_head.substring(0,sql_head.length()-1);
+		sql_tail=sql_tail.substring(0,sql_tail.length()-1);
+		String sql=sql_head+")"+sql_tail+")";
+		
+		int val=JdbcHelper.executeUpdate(sql,params.toArray());
 		return val;
 	}
 
@@ -70,35 +70,23 @@ public class RoleDaoImpl implements IRoleDao {
 	@Override
 	public int updateByPrimaryKeySelective(role t) {
 		// TODO Auto-generated method stub
+		List params=new ArrayList();
 		
-		
-		
-		// TODO Auto-generated method stub
-				List<String>  params=new ArrayList();
-				String sql="update role set name=?,";
-				if (t.getDesc()!=null) {
-					
-					sql+="desc=?,";
-					
-					
-				}
-				
-		         if (t.getResource_ids()!=null) {
-					
-					sql+="resource_ids=?,";
-					params.add(t.getResource_ids());
-					
-					
-				}
-				
-		         
-		         sql=sql.substring(0,sql.length()-1);
-		         sql+="where id=?";
-		         params.add(String.valueOf(t.getId()));
-		         int val=JdbcHelper.executeQuery(sql, params.toArray());
-		 		
-				return 0;
-		
+		String sql="update role set rolename=?,";
+		params.add(t.getRolename());
+		if(t.getDesc()!="") {
+			sql+="desc=?,";
+			params.add(t.getDesc());
+		}
+		if(t.getResource_ids()!="") {
+			sql+="resource_ids=?,";
+			params.add(t.getResource_ids());
+		}
+		sql=sql.substring(0,sql.length()-1);
+		sql+=" where id=?";
+		params.add(t.getId());
+		int val=JdbcHelper.executeUpdate(sql,params.toArray());
+		return val;
 	}
 
 }

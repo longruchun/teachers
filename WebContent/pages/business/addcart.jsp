@@ -17,7 +17,7 @@
     	Integer num=map.get(petid)+1;
     	map.put(petid,num);
     }else{
-    	map.put(petid,1);//啊啊啊
+    	map.put(petid,1);
     }
     
     session.setAttribute("CartList",map);
